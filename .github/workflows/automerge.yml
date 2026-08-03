@@ -1,0 +1,24 @@
+name: Auto-Merge Exercism PRs
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+# Grant the action permission to modify PRs and code
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Automatically merge the PR
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Uses the native GitHub CLI to merge the PR
+        run: gh pr merge "$PR_URL" --merge --auto
